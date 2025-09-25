@@ -1,0 +1,19 @@
+# Environment variables (IMPORTANT - keeps your API keys safe!)
+.env
+*.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Cache files from your script
+.cache_*.json
+
+# JSON data files (optional - you might want to keep these)
+*.json
+
+# Virtual environment (if you have one)
+venv/
+env/
