@@ -1,0 +1,20 @@
+ts,city,units,temp,humidity,description,wind_speed
+2025-10-07T04:17:15.311892Z,Seattle,metric,13.01,74,scattered clouds,2.15
+2025-10-07T04:20:09.048350Z,Seattle,imperial,55.04,74,scattered clouds,4.81
+2025-10-07T04:32:06.134081Z,Seattle,metric,12.8,74,scattered clouds,2.15
+2025-10-07T04:32:41.385515Z,Seattle,metric,12.51,69,scattered clouds,2.07
+2025-10-07T04:43:52.561707Z,Seattle,metric,12.51,69,scattered clouds,2.07
+2025-10-07T04:44:37.599797Z,Seattle,metric,12.51,69,scattered clouds,2.07
+2025-10-07T04:44:37.604635Z,Paris,metric,10.21,86,overcast clouds,0.54
+2025-10-07T04:44:37.641838Z,New York,metric,17.72,81,few clouds,3.5
+2025-10-07T04:44:57.935478Z,New York,imperial,63.9,81,few clouds,7.83
+2025-10-07T04:44:57.958972Z,Seattle,imperial,54.52,69,scattered clouds,4.63
+2025-10-07T04:44:57.968281Z,Paris,imperial,50.38,86,overcast clouds,1.21
+2025-10-07T05:02:37.201438+00:00,Seattle,metric,12.41,70,scattered clouds,2.07
+2025-10-07T05:03:12.939322+00:00,Seattle,metric,12.41,70,scattered clouds,2.07
+2025-10-07T05:04:00.763724+00:00,Seattle,metric,12.41,70,scattered clouds,2.07
+2025-10-07T05:04:17.754217+00:00,Seattle,imperial,54.34,70,scattered clouds,4.63
+2025-10-08T04:59:08.435253+00:00,Seattle,imperial,55.76,74,scattered clouds,4.43
+2025-10-08T06:20:08.527161+00:00,Miami,imperial,79.41,84,broken clouds,13.62
+2025-10-08T06:25:33.951159+00:00,Seattle,imperial,53.96,82,broken clouds,4.25
+2025-10-08T06:25:34.962769+00:00,Miami,imperial,79.41,84,broken clouds,13.62

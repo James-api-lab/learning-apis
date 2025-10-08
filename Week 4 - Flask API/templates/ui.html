@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+  <head><meta charset="utf-8"><title>Weather UI</title></head>
+  <body>
+    <h1>Weather</h1>
+    <form id="f">
+      <input id="city" placeholder="City (e.g., Seattle)" required>
+      <select id="units">
+        <option>metric</option><option>imperial</option><option>standard</option>
+      </select>
+      <button>Get</button>
+    </form>
+    <pre id="out"></pre>
+    <script>
+      f.onsubmit = async (e) => {
+        e.preventDefault();
+        const city = cityInput.value || city.value; // fallback if IDs differ
+      };
+    </script>
+    <script>
+      const f = document.getElementById('f');
+      const cityInput = document.getElementById('city');
+      const units = document.getElementById('units');
+      const out = document.getElementById('out');
+      f.onsubmit = async (e) => {
+        e.preventDefault();
+        const r = await fetch(`/weather/${encodeURIComponent(cityInput.value)}?units=${units.value}`);
+        const j = await r.json();
+        out.textContent = JSON.stringify(j, null, 2);
+      };
+    </script>
+  </body>
+</html>
