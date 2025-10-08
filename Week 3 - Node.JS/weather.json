@@ -1,0 +1,122 @@
+[
+  {
+    "city": "Seattle",
+    "ok": true,
+    "temp": 58.1,
+    "feels_like": 57.56,
+    "humidity": 84,
+    "weather": "light rain",
+    "wind_speed": 9.93,
+    "country": "US",
+    "obs_time_unix": 1759296824,
+    "obs_time_iso": "2025-10-01T05:33:44.000Z",
+    "units": "imperial",
+    "raw": {
+      "coord": {
+        "lon": -122.3321,
+        "lat": 47.6062
+      },
+      "weather": [
+        {
+          "id": 500,
+          "main": "Rain",
+          "description": "light rain",
+          "icon": "10n"
+        }
+      ],
+      "base": "stations",
+      "main": {
+        "temp": 58.1,
+        "feels_like": 57.56,
+        "temp_min": 58.1,
+        "temp_max": 58.1,
+        "pressure": 1007,
+        "humidity": 84,
+        "sea_level": 1007,
+        "grnd_level": 998
+      },
+      "visibility": 10000,
+      "wind": {
+        "speed": 9.93,
+        "deg": 185,
+        "gust": 29.06
+      },
+      "rain": {
+        "1h": 0.13
+      },
+      "clouds": {
+        "all": 100
+      },
+      "dt": 1759296824,
+      "sys": {
+        "country": "US",
+        "sunrise": 1759241240,
+        "sunset": 1759283454
+      },
+      "timezone": -25200,
+      "id": 5809844,
+      "name": "Seattle",
+      "cod": 200
+    }
+  },
+  {
+    "city": "Tokyo",
+    "ok": true,
+    "temp": 69.12,
+    "feels_like": 69.3,
+    "humidity": 76,
+    "weather": "moderate rain",
+    "wind_speed": 6.04,
+    "country": "JP",
+    "obs_time_unix": 1759297022,
+    "obs_time_iso": "2025-10-01T05:37:02.000Z",
+    "units": "imperial",
+    "raw": {
+      "coord": {
+        "lon": 139.6917,
+        "lat": 35.6895
+      },
+      "weather": [
+        {
+          "id": 501,
+          "main": "Rain",
+          "description": "moderate rain",
+          "icon": "10d"
+        }
+      ],
+      "base": "stations",
+      "main": {
+        "temp": 69.12,
+        "feels_like": 69.3,
+        "temp_min": 69.12,
+        "temp_max": 69.12,
+        "pressure": 1011,
+        "humidity": 76,
+        "sea_level": 1011,
+        "grnd_level": 1009
+      },
+      "visibility": 10000,
+      "wind": {
+        "speed": 6.04,
+        "deg": 21,
+        "gust": 6.78
+      },
+      "rain": {
+        "1h": 2.37
+      },
+      "clouds": {
+        "all": 100
+      },
+      "dt": 1759297022,
+      "sys": {
+        "country": "JP",
+        "sunrise": 1759264545,
+        "sunset": 1759307166
+      },
+      "timezone": 32400,
+      "id": 1850144,
+      "name": "Tokyo",
+      "cod": 200
+    }
+  }
+]

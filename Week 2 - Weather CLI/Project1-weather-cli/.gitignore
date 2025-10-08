@@ -1,0 +1,17 @@
+﻿__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+*.env
+.env.*
+week2/.env
+.DS_Store
+Thumbs.db
+
+logs/
+data/weather_chart.png
+data/run_*.csv
+
+data/weather_log.csv
+data/cache/

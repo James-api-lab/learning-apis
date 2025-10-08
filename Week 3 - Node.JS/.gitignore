@@ -1,0 +1,19 @@
+﻿node_modules/
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.log
+.vscode/
+.idea/
+# generated data & images
+cache/
+logs/*.csv
+weather-*.csv
+weather.csv
+out.csv
+*.png
+# local backups
+package.backup.json
