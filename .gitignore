@@ -1,6 +1,8 @@
-
+﻿__pycache__/
+*.pyc
+.venv/
 .env
 
-.env
-
-holder/
+data/*.db
+data/*.sqlite
+logs/*.log

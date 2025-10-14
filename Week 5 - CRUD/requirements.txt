@@ -1,0 +1,7 @@
+# in Week 5 - CRUD folder
+@'
+Flask==3.0.3
+Flask-SQLAlchemy==3.1.1
+python-dotenv==1.0.1
+pytest==8.3.3
+'@ | Set-Content -Path .\requirements.txt -Encoding UTF8
