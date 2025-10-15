@@ -7,21 +7,58 @@ bp = Blueprint("records", __name__)
 
 @bp.get("/")
 def list_records():
-    limit = int(request.args.get("limit", 20))
-    rows = WeatherRecord.query.order_by(WeatherRecord.created_at.desc()).limit(limit)
+    try:
+        limit = int(request.args.get("limit", 20))
+        if limit < 1 or limit > 100:
+            raise ValueError()
+    except ValueError:
+        return jsonify(error="`limit` must be an integer between 1 and 100"), 400
+
+    try:
+        offset = int(request.args.get("offset", 0))
+        if offset < 0:
+            raise ValueError()
+    except ValueError:
+        return jsonify(error="`offset` must be a non-negative integer"), 400
+
+    query = WeatherRecord.query.order_by(WeatherRecord.created_at.desc())
+    rows = query.offset(offset).limit(limit).all()
     return jsonify([r.to_dict() for r in rows])
+
 
 @bp.get("/<int:id>")
 def get_record(id):
-    rec = WeatherRecord.query.get(id) or abort(404)
+    rec = WeatherRecord.query.get(id)
+    if not rec:
+        return jsonify(error="record not found"), 404
     return jsonify(rec.to_dict())
+
 
 @bp.post("/")
 def create_record():
     data = request.get_json() or {}
-    if "city" not in data:
-        return jsonify(error="city required"), 400
-    rec = WeatherRecord(city=data["city"], temp=data.get("temp"), humidity=data.get("humidity"))
+    # Required field
+    city = data.get("city")
+    if not city or not isinstance(city, str):
+        return jsonify(error="field `city` is required as a string"), 400
+
+    # Optional fields
+    temp = data.get("temp")
+    if temp is not None:
+        try:
+            temp = float(temp)
+        except (TypeError, ValueError):
+            return jsonify(error="field `temp` must be a number"), 400
+
+    humidity = data.get("humidity")
+    if humidity is not None:
+        try:
+            humidity = float(humidity)
+        except (TypeError, ValueError):
+            return jsonify(error="field `humidity` must be a number"), 400
+
+    # Create and commit
+    rec = WeatherRecord(city=city, temp=temp, humidity=humidity)
     db.session.add(rec)
     db.session.commit()
     return jsonify(rec.to_dict()), 201
