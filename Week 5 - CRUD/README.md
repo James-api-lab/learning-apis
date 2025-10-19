@@ -10,17 +10,17 @@ This week marks your transition from *API consumer* to *API creator*.
 You’ve already built stateless APIs that fetched external data.  
 Now, you’re building **persistent**, **database-backed** APIs that own and manage their own data using:
 
-- **Flask** — a lightweight Python web framework for routes and requests.  
-- **SQLite** — a local relational database that stores data as a single `.db` file.  
-- **SQLAlchemy** — an ORM (Object Relational Mapper) that translates Python objects ↔ SQL tables.  
-- **CRUD pattern** — Create, Read, Update, Delete routes to manage records.  
+- **Flask** — lightweight Python web framework for routes & requests  
+- **SQLite** — local relational database (single `.db` file)  
+- **SQLAlchemy** — ORM translating Python objects ↔ SQL tables  
+- **CRUD pattern** — Create, Read, Update, Delete routes for full data control  
 
-By the end of Week 5, you’ll have:
+By the end of Week 5 you’ll have:
 ✅ A functioning Flask + SQLite backend  
 ✅ Real CRUD endpoints  
-✅ Error handling & logging  
+✅ Validation & error handling  
 ✅ Basic tests  
-✅ A mental model for migrating to **FastAPI** next week.
+✅ A mental model for migrating to **FastAPI** next week  
 
 ---
 
@@ -29,167 +29,92 @@ By the end of Week 5, you’ll have:
 ```bash
 week5-flask-crud/
 ├─ app/
-│  ├─ __init__.py        # Flask app factory, blueprint registration
+│  ├─ __init__.py        # Flask app factory, blueprints, error handlers
 │  ├─ config.py          # Database & environment configuration
 │  ├─ db.py              # SQLAlchemy instance
 │  ├─ models.py          # ORM model(s) — WeatherRecord
 │  └─ routes/
 │     └─ records.py      # CRUD + stats routes
 │
-├─ data/                 # Local SQLite database file (weather.db)
-├─ logs/                 # Rotating logs will live here
+├─ data/                 # SQLite database file (weather.db)
+├─ logs/                 # Rotating logs (future)
 ├─ scripts/
-│  └─ seed.py            # Script to seed example data
+│  └─ seed.py            # Seed example data
 │
-├─ .env                  # Local config file (ignored by git)
-├─ .env.example          # Example config for teammates
-├─ .gitignore            # Ignore venv, logs, DB, etc.
-├─ requirements.txt      # Python dependencies
-├─ run.py                # Entrypoint for Flask app
-└─ README.md             # (This file)
+├─ .env / .env.example
+├─ .gitignore
+├─ requirements.txt
+├─ run.py
+└─ README.md
 ```
 
 ---
 
-## ⚙️ Setup & Installation
+## ⚙️ Setup
 
-### 1. Create & activate virtual environment
 ```bash
 python -m venv .venv
-. .venv\Scripts\Activate.ps1   # (PowerShell on Windows)
-# OR: source .venv/bin/activate (macOS/Linux)
-```
+source .venv/bin/activate         # macOS/Linux
+# .\.venv\Scripts\Activate.ps1    # Windows PowerShell
 
-### 2. Install dependencies
-```bash
 pip install -r requirements.txt
-```
-
-### 3. Verify Flask runs
-```bash
 python run.py
 ```
 
-Open your browser or run:
+Check health:
+
 ```bash
 curl http://127.0.0.1:5000/health
 ```
-
-✅ Expected:
-```json
-{"ok": true, "version": "0.1.0"}
-```
-
-This confirms Flask + SQLite + SQLAlchemy are working.
+→ `{"ok": true, "version": "0.1.0"}` ✅
 
 ---
 
-## 🧩 Configuration
+## 🚀 Endpoints
 
-`app/config.py` dynamically creates your SQLite path using absolute references, so you’ll never hit the common “unable to open database file” error.
+Base: `http://127.0.0.1:5000`
 
-Environment variables (optional):
-
+### ➕ POST /records/
+Create a record:
 ```bash
-# .env.example
-# DATABASE_URL=sqlite:///C:/full/path/to/weather.db
-# FLASK_ENV=development
-# FLASK_DEBUG=1
+curl -X POST http://127.0.0.1:5000/records/   -H "Content-Type: application/json"   -d '{"city":"Seattle","temp":18,"humidity":70}'
 ```
 
-The app defaults to storing the database at:
-```
-project_root/data/weather.db
-```
-
----
-
-## 🧠 Concept Recap — Persistence
-
-Until now, your APIs were **stateless** — data disappeared between runs.  
-By adding a database, your API gains **state** and can permanently store records.
-
-**Stack interaction:**
-
-```
-Client → Flask (routes) → SQLAlchemy (ORM) → SQLite (storage)
-```
-
-SQLAlchemy handles the translation between Python and SQL.
-
----
-
-## 🚀 Usage — CRUD Endpoints
-
-Base URL: `http://127.0.0.1:5000`
-
-### 1. Create Record (`POST /records/`)
-Create a new weather record.
-
+### 📖 GET /records/
+Read all:
 ```bash
-curl.exe -X POST "http://127.0.0.1:5000/records/" ^
-  -H "Content-Type: application/json" ^
-  -d "{\"city\":\"Seattle\",\"temp\":18,\"humidity\":70}"
+curl http://127.0.0.1:5000/records/
 ```
 
-**Response:**
-```json
-{
-  "id": 1,
-  "city": "Seattle",
-  "temp": 18.0,
-  "humidity": 70.0,
-  "created_at": "2025-10-14T03:50:00.000Z"
-}
+Supports pagination:
+```
+/records?limit=10&offset=5
 ```
 
----
-
-### 2. Read All Records (`GET /records/`)
+### 🔍 GET /records/<id>
+Read one record:
 ```bash
-curl.exe "http://127.0.0.1:5000/records/"
+curl http://127.0.0.1:5000/records/1
 ```
 
-**Response:**
-```json
-[
-  {"id":1,"city":"Seattle","temp":18.0,"humidity":70.0,"created_at":"..."}
-]
-```
-
----
-
-### 3. Read One (`GET /records/<id>`)
+### 🧩 PUT /records/<id>
+Update existing:
 ```bash
-curl.exe "http://127.0.0.1:5000/records/1"
+curl -X PUT http://127.0.0.1:5000/records/1   -H "Content-Type: application/json"   -d '{"city":"Seattle (Updated)","temp":19}'
 ```
 
----
-
-### 4. Update (`PUT /records/<id>`)
+### 🗑️ DELETE /records/<id>
+Delete a record:
 ```bash
-curl.exe -X PUT "http://127.0.0.1:5000/records/1" ^
-  -H "Content-Type: application/json" ^
-  -d "{\"temp\":22,\"humidity\":60}"
+curl -X DELETE http://127.0.0.1:5000/records/2
 ```
 
----
-
-### 5. Delete (`DELETE /records/<id>`)
+### 📊 GET /records/stats
+Grouped averages:
 ```bash
-curl.exe -X DELETE "http://127.0.0.1:5000/records/1"
+curl http://127.0.0.1:5000/records/stats
 ```
-
----
-
-### 6. Stats (`GET /records/stats`)
-Aggregates data grouped by city.
-
-```bash
-curl.exe "http://127.0.0.1:5000/records/stats"
-```
-
-**Response:**
+→
 ```json
 [
   {"city":"Seattle","avg_temp":18.5,"count":3},
@@ -199,123 +124,90 @@ curl.exe "http://127.0.0.1:5000/records/stats"
 
 ---
 
-## 🧑‍💻 Running the Seed Script
+## ⚠️ Validation & Error Contract (Day 2–3)
 
-You can preload the database with sample data:
+Every endpoint returns **JSON** responses — even errors.
 
-```bash
-python -m scripts.seed
+### Common 4xx responses
+```json
+{"error": "field `city` is required as a string"}
+{"error": "`limit` must be an integer between 1 and 100"}
+{"error": "record not found"}
+{"error": "Not Found"}   // from global 404 handler
 ```
 
-If you run it again, it will skip reseeding if data already exists.
+### Global 404 handler (in `app/__init__.py`)
+```python
+@app.errorhandler(404)
+def not_found(e):
+    return jsonify(error="Not Found"), 404
+```
+
+Ensures consistent JSON for any missing route or resource.
 
 ---
 
-## 🧰 Common PowerShell Tips
+## 🧠 Key Concepts (Day 3)
 
-PowerShell aliases `curl` → `Invoke-WebRequest`, which doesn’t support `-H` or `-d`.
-
-Use one of:
-```bash
-Invoke-RestMethod -Uri "http://127.0.0.1:5000/records/" -Method Get
-Invoke-RestMethod -Uri "http://127.0.0.1:5000/records/" -Method Post -Body '{"city":"Austin"}' -ContentType "application/json"
-# or
-curl.exe ...
-```
+| Concept | Description |
+|----------|--------------|
+| **Idempotence** | `PUT` and `DELETE` can be repeated without side effects |
+| **Commit** | `db.session.commit()` makes database changes permanent |
+| **Predictable Errors** | Clients can parse JSON 404s consistently |
+| **Git Analogy** | PUT/DELETE changes mirror editing/removing files + commits |
+| **Flask Error Handling** | Global handler ensures a consistent contract |
 
 ---
 
-## 🧪 Testing (pytest)
-
-Sample test (`tests/test_api.py`):
+## 🧪 Example Tests
 
 ```python
-import pytest
-from app import create_app
+def test_put_and_delete(client):
+    r = client.post("/records/", json={"city": "TestCity", "temp": 20})
+    rid = r.get_json()["id"]
 
-@pytest.fixture
-def client():
-    app = create_app()
-    app.config.update(TESTING=True)
-    return app.test_client()
+    # Update existing
+    u = client.put(f"/records/{rid}", json={"temp": 25})
+    assert u.status_code == 200
 
-def test_health(client):
-    rv = client.get("/health")
-    assert rv.status_code == 200
-    assert rv.get_json()["ok"]
+    # Delete existing
+    d = client.delete(f"/records/{rid}")
+    assert d.status_code == 200
 
-def test_create_record(client):
-    r = client.post("/records/", json={"city": "Testville", "temp": 20})
-    assert r.status_code == 201
-    data = r.get_json()
-    assert data["city"] == "Testville"
+    # Missing
+    miss = client.delete(f"/records/999999")
+    assert miss.status_code == 404
 ```
 
-Run:
+Run with:
 ```bash
 pytest -q
 ```
 
 ---
 
-## 🪵 Logging & Error Handling (Preview)
+## 🧭 Instructor Notes — Day 3 Milestone
 
-Logging will rotate automatically when implemented:
-
-```python
-from logging.handlers import RotatingFileHandler
-import logging
-
-handler = RotatingFileHandler("logs/app.log", maxBytes=1_000_000, backupCount=3)
-handler.setLevel(logging.INFO)
-app.logger.addHandler(handler)
-```
-
-Common error responses:
-```json
-{"error": "Not Found"}
-{"error": "Internal Server Error"}
-```
-
----
-
-## 🧭 Instructor Notes — Day 1 Summary
-
-| Concept | Why It Matters |
-|----------|----------------|
-| **Persistence** | Keeps data across restarts; makes APIs stateful |
-| **SQLite** | Lightweight, self-contained database (perfect for local dev) |
-| **ORM (SQLAlchemy)** | Translates Python objects ↔ SQL tables |
-| **App Factory Pattern** | Enables modularity, testability, and multiple environments |
-| **Blueprints** | Organize routes logically |
-| **Absolute DB Paths** | Avoids Windows path errors |
+✅ `PUT` & `DELETE` endpoints operational  
+✅ Global JSON 404 handler implemented  
+✅ End-to-end CRUD now consistent  
+✅ Ready for Day 4 (Stats + Seeding + Testing)
 
 ---
 
 ## 🧩 Reflection Prompts
 
-1. What does “persistence” mean in the context of APIs?  
-2. Why do we need to `commit()` after adding records?  
-3. What are the advantages of using an ORM instead of raw SQL?  
-4. Why do `/records` and `/records/` both work after adding `app.url_map.strict_slashes = False`?
+1. What’s the difference between *route not found* and *resource not found*?  
+2. Why is idempotence valuable in REST design?  
+3. Why should APIs always return JSON instead of HTML for errors?  
+4. How does `commit()` in SQLAlchemy resemble `git commit`?
 
 ---
 
-## 📤 Deployment Prep (Stretch)
+## 🏁 End of Week 5 — Day 3 Milestone
 
-- Add Dockerfile for containerized runs  
-- Add `.env` configuration for production  
-- Replace SQLite with PostgreSQL for cloud environments  
-
----
-
-## 🏁 End of Week 5, Day 1 Milestone
-
-✅ Flask + SQLAlchemy configured  
-✅ Database auto-creates and persists data  
-✅ `/health` endpoint live  
-✅ `/records` CRUD routes available  
-✅ Seed script functioning  
-✅ Ready for Day 2 (Validation + Read/Write logic deep dive)
-
----
+✅ Flask + SQLAlchemy persistence  
+✅ POST/GET/PUT/DELETE working  
+✅ Validation and error handling  
+✅ Predictable JSON error contract  
+✅ Tests passing
