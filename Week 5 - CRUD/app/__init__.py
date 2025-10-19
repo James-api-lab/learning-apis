@@ -8,15 +8,32 @@ def create_app():
     db.init_app(app)
 
     with app.app_context():
-        # Import models so SQLAlchemy is aware of them
         from .models import WeatherRecord
-        # Create tables if they don't exist
         db.create_all()
 
     # Health check
     @app.get("/health")
     def health():
         return jsonify(ok=True, version="0.1.0")
+    @app.get("/__routes")
+    def list_routes():
+        rules = []
+        for r in app.url_map.iter_rules():
+            rules.append({
+                "rule": r.rule,
+                "methods": sorted(m for m in r.methods if m not in {"HEAD", "OPTIONS"})
+            })
+        # Sort for stable display
+        rules.sort(key=lambda x: x["rule"])
+        return jsonify(rules)
+
+    # ✅ Always return JSON for 404s (no more HTML pages)
+    @app.errorhandler(404)
+    def not_found(e):
+        return jsonify(error="Not Found"), 404
+
+    # (Optional) accept both /path and /path/
+    # app.url_map.strict_slashes = False
 
     # Register blueprints
     from .routes.records import bp as records_bp
