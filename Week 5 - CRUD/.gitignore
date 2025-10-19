@@ -5,3 +5,7 @@ __pycache__/
 .data/
 data/
 logs/
+
+# logs
+logs/*.log
+logs/app.log
